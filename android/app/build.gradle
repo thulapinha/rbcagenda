@@ -1,0 +1,78 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services' // FlutterFire Configuration
+    id 'kotlin-android'
+    id 'dev.flutter.flutter-gradle-plugin'
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace = "com.ronnilson.nossa_despesas"
+    compileSdk = 34 // Atualize para a versão 34
+    ndkVersion = flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11 // Atualize para Java 11
+        targetCompatibility = JavaVersion.VERSION_11 // Atualize para Java 11
+        coreLibraryDesugaringEnabled = true
+    }
+
+    defaultConfig {
+        applicationId "com.ronnilson.nossa_despesas"
+        minSdkVersion 23
+        targetSdkVersion 34
+        versionCode 1 // Valor padrão para versionCode
+        versionName "2.1" // Valor padrão para versionName
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword = keystoreProperties['keyPassword']
+            storeFile = file("C:/Users/ronil/StudioProjects/rbcagenda/android/app/upload-keystore.jks")
+            storePassword = keystoreProperties['storePassword']
+        }
+    }
+
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.release
+            minifyEnabled true // Ativa a redução de código não utilizado
+            shrinkResources true // Ativa a remoção de recursos não utilizados
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:-options'
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-firestore:24.0.1'
+    implementation 'com.itextpdf:itext7-core:7.1.13' // Adiciona a biblioteca PDF se necessário
+}
+
+flutter {
+    source = "../.."
+}

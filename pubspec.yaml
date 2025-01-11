@@ -1,0 +1,54 @@
+name: AgendaRbc
+description: "Aplicativo de anotação de despesas."
+
+publish_to: 'none'
+
+version: 2.1.1+1
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  firebase_core:
+  firebase_database:
+  firebase_auth:
+  cloud_firestore: ^5.6.1
+  flutter_masked_text2: ^0.9.1
+  flutter_local_notifications: ^18.0.1
+  firebase_messaging:
+  url_launcher: ^6.0.9
+  syncfusion_flutter_charts: ^28.1.38
+  flutter_pdfview: ^1.0.4+3
+  shared_preferences: ^2.0.13
+  path_provider: ^2.0.6
+  pdf: ^3.3.0
+  rx_shared_preferences: ^4.0.0
+
+  google_sign_in:
+  screenshot: ^3.0.0
+  provider: ^6.1.2
+
+  flutter_launcher_icons:
+  icons_launcher: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+assets:
+  - android/assets/RBC.png
+  - android/assets/web_hi_res_512.png
+
+icons_launcher:
+  image_path: "android/assets/RBC.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
