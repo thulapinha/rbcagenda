@@ -17,7 +17,7 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
   final _descricaoController = TextEditingController();
   final _parcelasController = TextEditingController();
   bool _isParcelada = false;
-  bool _isLoading = false;  // Variável para indicar estado de carregamento
+  bool _isLoading = false; // Variável para indicar estado de carregamento
   DateTime _vencimento = DateTime.now();
 
   Future<void> _salvarDespesa() async {
@@ -31,7 +31,7 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
       if (user != null) {
         FirebaseFirestore firestore = FirebaseFirestore.instance;
         CollectionReference despesas =
-        firestore.collection('users').doc(user.uid).collection('despesas');
+            firestore.collection('users').doc(user.uid).collection('despesas');
 
         double valor = double.parse(_valorController.text.replaceAll(',', '.'));
         int parcelas = _isParcelada ? int.parse(_parcelasController.text) : 1;
@@ -39,8 +39,9 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
         for (int i = 0; i < parcelas; i++) {
           await despesas.add({
             'nome': _nomeController.text,
-            'valor': valor,  // Mantém o valor total para cada parcela
-            'vencimento': DateTime(_vencimento.year, _vencimento.month + i, _vencimento.day),
+            'valor': valor, // Mantém o valor total para cada parcela
+            'vencimento': DateTime(
+                _vencimento.year, _vencimento.month + i, _vencimento.day),
             'descricao': _descricaoController.text,
             'parcelas': parcelas,
             'parcelas_restantes': parcelas - i,
@@ -67,7 +68,8 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
         Navigator.pop(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Por favor, faça login para cadastrar a despesa')),
+          const SnackBar(
+              content: Text('Por favor, faça login para cadastrar a despesa')),
         );
         setState(() {
           _isLoading = false;
@@ -83,6 +85,7 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         inputDecorationTheme: const InputDecorationTheme(
           labelStyle: TextStyle(color: Colors.white),
@@ -93,7 +96,8 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Cadastro de Despesa', style: TextStyle(color: Colors.white)),
+          title: const Text('Cadastro de Despesa',
+              style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.grey[850],
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -141,7 +145,8 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
                       },
                     ),
                     SwitchListTile(
-                      title: const Text('A despesa será parcelada?', style: TextStyle(color: Colors.white)),
+                      title: const Text('A despesa será parcelada?',
+                          style: TextStyle(color: Colors.white)),
                       value: _isParcelada,
                       onChanged: (bool value) {
                         setState(() {
@@ -161,18 +166,22 @@ class _CadastroDespesaPageState extends State<CadastroDespesaPage> {
                         ],
                         style: const TextStyle(color: Colors.white),
                         validator: (value) {
-                          if (value == null || value.isEmpty || int.tryParse(value) == null) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              int.tryParse(value) == null) {
                             return 'Por favor, insira um número válido de parcelas';
                           }
                           return null;
                         },
                       ),
                     ListTile(
-                      title: const Text('Data de Vencimento', style: TextStyle(color: Colors.white)),
+                      title: const Text('Data de Vencimento',
+                          style: TextStyle(color: Colors.white)),
                       subtitle: Text(
                           '${_vencimento.day}/${_vencimento.month}/${_vencimento.year}',
                           style: const TextStyle(color: Colors.white)),
-                      trailing: const Icon(Icons.calendar_today, color: Colors.white),
+                      trailing:
+                          const Icon(Icons.calendar_today, color: Colors.white),
                       onTap: () async {
                         DateTime? pickedDate = await showDatePicker(
                           context: context,

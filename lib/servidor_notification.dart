@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -6,62 +8,65 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> initialize() async {
     tz.initializeTimeZones();
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+    AndroidInitializationSettings('@mipmap/ic_launcher');
     const InitializationSettings initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid);
+    InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      if (notification != null) {
+        showNotification(notification.title!, notification.body!);
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    FirebaseMessaging.instance.getToken().then((token) {
+      print("FCM Token: $token");
+    });
+  }
+
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    RemoteNotification? notification = message.notification;
+    if (notification != null) {
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+        'your_channel_id',
+        'your_channel_name',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: true,
+      );
+      const NotificationDetails platformChannelSpecifics =
+      NotificationDetails(android: androidPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.show(
+          0, notification.title, notification.body, platformChannelSpecifics);
+    }
   }
 
   Future<void> showNotification(String title, String body) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
+    AndroidNotificationDetails(
       'your_channel_id',
       'your_channel_name',
       importance: Importance.max,
       priority: Priority.high,
-      showWhen: false,
+      showWhen: true,
     );
     const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
+    NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
         0, title, body, platformChannelSpecifics);
-  }
-
-  Future<void> scheduleNotification(
-      String title, String body, int hour, int minute) async {
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      title,
-      body,
-      _nextInstanceOfTime(hour, minute),
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          importance: Importance.max,
-          priority: Priority.high,
-        ),
-      ),
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.time,
-      androidScheduleMode: AndroidScheduleMode.exact,
-    );
-  }
-
-  tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
-    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    return scheduledDate;
   }
 
   Future<List<Map<String, dynamic>>> verificarVencimentoDespesas() async {
@@ -71,7 +76,7 @@ class NotificationService {
     if (user != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       CollectionReference despesasCollection =
-          firestore.collection('users').doc(user.uid).collection('despesas');
+      firestore.collection('users').doc(user.uid).collection('despesas');
 
       DateTime now = DateTime.now();
       DateTime limite = now.add(const Duration(days: 5));
@@ -94,11 +99,37 @@ class NotificationService {
               'diasRestantes': diasRestantes,
             });
 
-            // Exibe a notificação
-            showNotification(
-              'Vencimento Próximo',
-              'A despesa ${doc['nome']} vence em $diasRestantes dias',
+            // Enviar notificação via FCM
+            await _firebaseMessaging.subscribeToTopic(user.uid);
+            await FirebaseMessaging.instance.sendMessage(
+              to: "/topics/${user.uid}",
+              data: {
+                "title": "Vencimento Próximo",
+                "body": "A despesa ${doc['nome']} vence em $diasRestantes dias"
+              },
             );
+
+            // Agendar notificações a cada 2 horas
+            for (int i = 1; i <= diasRestantes * 12; i++) {
+              await flutterLocalNotificationsPlugin.zonedSchedule(
+                i,
+                'Vencimento Próximo',
+                'A despesa ${doc['nome']} vence em $diasRestantes dias',
+                tz.TZDateTime.now(tz.local).add(Duration(hours: 2 * i)),
+                const NotificationDetails(
+                  android: AndroidNotificationDetails(
+                    'your_channel_id',
+                    'your_channel_name',
+                    importance: Importance.max,
+                    priority: Priority.high,
+                    showWhen: true,
+                  ),
+                ),
+                uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
+                androidScheduleMode: AndroidScheduleMode.exact,
+              );
+            }
           }
         }
       }

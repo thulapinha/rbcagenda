@@ -22,21 +22,25 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      List<Map<String, dynamic>> despesas = await _notificationService.verificarVencimentoDespesas();
-      if (despesas.isNotEmpty) {
-        _mostrarAlertaVencimento(despesas);
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _verificarDespesas();
     });
+  }
+
+  Future<void> _verificarDespesas() async {
+    List<Map<String, dynamic>> despesas = await _notificationService.verificarVencimentoDespesas();
+    if (despesas.isNotEmpty) {
+      _mostrarAlertaVencimento(despesas);
+    }
   }
 
   void _mostrarAlertaVencimento(List<Map<String, dynamic>> despesas) {
     showDialog(
       context: context,
-      barrierDismissible: true, // Permitir sair do diálogo ao clicar fora
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Vencimento Próximo',style: TextStyle(color: Colors.black),),
+          title: const Text('Vencimento Próximo', style: TextStyle(color: Colors.black)),
           content: SizedBox(
             width: double.maxFinite,
             child: SingleChildScrollView(
@@ -111,6 +115,7 @@ class _HomePageState extends State<HomePage> {
           ValorDespesasWidget(),
           SizedBox(height: 150),
           BotaoDespesasWidget(),
+
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

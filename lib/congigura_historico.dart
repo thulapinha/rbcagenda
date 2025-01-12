@@ -94,7 +94,7 @@ class _ConfHistoricoState extends State<ConfHistorico> {
               },
               activeColor: Colors.green, // Cor quando o switch está ativo
               inactiveThumbColor:
-                  Colors.red, // Cor do polegar quando o switch está inativo
+              Colors.red, // Cor do polegar quando o switch está inativo
               inactiveTrackColor: Colors
                   .redAccent, // Cor da trilha quando o switch está inativo
             ),
@@ -112,7 +112,7 @@ class _ConfHistoricoState extends State<ConfHistorico> {
                   });
                 },
                 items:
-                    <int>[1, 3, 6, 12].map<DropdownMenuItem<int>>((int value) {
+                <int>[1, 3, 6, 12].map<DropdownMenuItem<int>>((int value) {
                   return DropdownMenuItem<int>(
                     value: value,
                     child: Text(
@@ -137,7 +137,7 @@ class _ConfHistoricoState extends State<ConfHistorico> {
               },
               activeColor: Colors.green, // Cor quando o switch está ativo
               inactiveThumbColor:
-                  Colors.red, // Cor do polegar quando o switch está inativo
+              Colors.red, // Cor do polegar quando o switch está inativo
               inactiveTrackColor: Colors
                   .redAccent, // Cor da trilha quando o switch está inativo
             ),

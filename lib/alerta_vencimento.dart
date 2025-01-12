@@ -28,7 +28,7 @@ class _VencimentoAlertaPageState extends State<VencimentoAlertaPage> {
     if (user != null) {
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       CollectionReference despesas =
-          firestore.collection('users').doc(user.uid).collection('despesas');
+      firestore.collection('users').doc(user.uid).collection('despesas');
 
       DateTime now = DateTime.now();
       DateTime limite = now.add(const Duration(days: 5));
