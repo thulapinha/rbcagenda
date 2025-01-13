@@ -3,7 +3,7 @@ description: "Aplicativo de anotação de despesas."
 
 publish_to: 'none'
 
-version: 2.1.1+1
+version: 2.1.0+1
 
 environment:
   sdk: ">=2.17.0 <4.0.0"

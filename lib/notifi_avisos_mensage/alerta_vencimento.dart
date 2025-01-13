@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:AgendaRbc/servidor_notification.dart';
+import 'package:AgendaRbc/notifi_avisos_mensage/servidor_notification.dart';
 
 class VencimentoAlertaPage extends StatefulWidget {
   const VencimentoAlertaPage({super.key});

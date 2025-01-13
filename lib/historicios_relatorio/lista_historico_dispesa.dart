@@ -1,10 +1,10 @@
 import 'package:AgendaRbc/historicios_relatorio/conf_pg/confirmacao_pg.dart';
 import 'package:AgendaRbc/historicios_relatorio/despesa_lista/despesa_list_itens.dart';
+import 'package:AgendaRbc/historicios_relatorio/historico_pg_despesa.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
-import 'historico_pg_despesa.dart';
 
 class ListaDespesasPage extends StatefulWidget {
   final bool editarDespesa;
@@ -72,7 +72,7 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> {
       _buscarDespesasDoMes(); // Recarregar as despesas
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HistoricoPage()),
+        MaterialPageRoute(builder: (context) =>  HistoricoPage()),
       );
     }
   }
@@ -234,7 +234,7 @@ class _ListaDespesasPageState extends State<ListaDespesasPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HistoricoPage()),
+                MaterialPageRoute(builder: (context) =>  HistoricoPage()),
               );
             },
             backgroundColor: Colors.blue,

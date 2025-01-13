@@ -1,10 +1,10 @@
-import 'package:AgendaRbc/congigura_historico.dart';
+import 'package:AgendaRbc/historicios_relatorio/conf_pg/congigura_historico.dart';
+import 'package:AgendaRbc/graficos/grafico_dispesa.dart';
 import 'package:flutter/material.dart';
-import 'package:AgendaRbc/grafico_dispesa.dart';
 import 'package:AgendaRbc/home_org/botao_despesas_widget.dart';
 import 'package:AgendaRbc/home_org/menu_drawer.dart';
 import 'package:AgendaRbc/home_org/valor_despesas_widget.dart';
-import 'package:AgendaRbc/servidor_notification.dart';
+import 'package:AgendaRbc/notifi_avisos_mensage/servidor_notification.dart';
 
 class HomePage extends StatefulWidget {
   final String username;
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
           if (index == 0) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const GraficoDespesasPage()),
+              MaterialPageRoute(builder: (context) => const GraficoDespesasPage()), // Corrigido
             );
           } else if (index == 1) {
             Navigator.push(
