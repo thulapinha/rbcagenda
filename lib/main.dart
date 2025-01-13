@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:AgendaRbc/cadastro/cadastro.dart';
-import 'package:AgendaRbc/contato.dart';
+import 'package:AgendaRbc/servidor_firebase/contato.dart';
 import 'package:AgendaRbc/historicios_relatorio/lista_historico_dispesa.dart';
 import 'package:AgendaRbc/logo/login.dart';
 import 'package:AgendaRbc/home_org/home_page.dart';
-import 'package:AgendaRbc/servidor_notification.dart';
+import 'package:AgendaRbc/notifi_avisos_mensage/servidor_notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,3 +71,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+

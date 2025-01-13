@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:AgendaRbc/historicios_relatorio/lista_historico_dispesa.dart';
-import 'package:AgendaRbc/perfil.dart';
+import 'package:AgendaRbc/servidor_firebase/perfil.dart';
 
 class MenuDrawer extends StatelessWidget {
   final VoidCallback logoutCallback;
